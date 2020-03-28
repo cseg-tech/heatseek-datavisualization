@@ -1,0 +1,11 @@
+city	state	permalink	created_at	lat	long	violation
+Seattle	WA	ubyl-zbhagnva-oerjvat	2014-06-30 21:50:38	47.630808	-122.374517	1
+Hudson	MA	zrqhfn-oerjvat-pbzcnal	2014-06-30 21:50:38	42.39095	-71.566769	1
+Denver	Colorado	fgne-one-2aq	2014-06-30 21:50:38	39.743029	-104.969927	0
+West Hollywood	CA	gur-ubea	2014-06-30 21:50:38	34.084443	-118.385162	0
+Fairfax	Virginia	tlfcl-fbhy	2014-06-30 21:50:38	38.873687	-77.230076	0
+Seattle	WA	znepur-zr	2014-12-01 00:30:22	47.630818	-122.374517	1
+Hudson	MA	ubyynaq-cresbezvat-negf-pragre	2014-12-01 00:30:22	42.39105	-71.566769	1
+Denver	Colorado	arffn	2014-12-01 00:30:22	39.743039	-104.969927	1
+West Hollywood	CA	cnfnqran-cvmmn-pb	2014-12-01 00:30:22	34.084453	-118.385162	1
+Fairfax	Virginia	rin-f-ba-znva	2014-12-01 00:30:22	38.873697	-77.230076 1
