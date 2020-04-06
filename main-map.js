@@ -3,64 +3,48 @@ var map = L
   .map('mapid')
   .setView([40.730610, -73.935242], 11);   // center position + zoom
 
-// Add a tile to the map = a background. Comes from OpenStreetmap
+// Add background to map (many diff options: https://leaflet-extras.github.io/leaflet-providers/preview/)
 L.tileLayer(
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-    }).addTo(map);
+    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
 
-// Add a svg layer to the map L.svg().addTo(map);
-
-// Create data for circles:
-var data = [
-  {"lat": 40.848111, "lng": -73.909063, "size": 14, "color": "Close"},
-  {"lat": 40.702, "lng": -73.948105, "size": 12, "color": "Close"},
-  {"lat": 40.65836, "lng": -73.960466, "size": 9, "color": "Open"}
-];
+// Add a svg layer to the map 
+L.svg().addTo(map);
 
 // Create color palettes
 var violation = {
-  "Close": "#fff",
-  "Open": "#000"
+  true: "red",
+  false: "green"
 }
 
-// plot onto map
-for ( var i = 0; i < data.length; ++i ) 
-{
-   L.circleMarker( 
-     [data[i].lat, data[i].lng],
-     {
-       stroke: false,
-       radius: data[i].size,
-       color: violation[data[i].color],
-       fillOpacity: 0.8
-     })
-      .addTo( map );
-}
+// Plot map
+d3.json("map-data.json", function(data) {
 
-/*
-// Select the svg area and add circles:
-d3.select("#mapid")
-  .select("svg")
-  .selectAll("myCircles")
-  .data(data)
-  .enter()
-  .append("circle")
-    .attr("cx", function(d){ return map.latLngToLayerPoint([d.lat, d.lng]).x })
-    .attr("cy", function(d){ return map.latLngToLayerPoint([d.lat, d.lng]).y })
-    .attr("r", 14)
-    .style("fill", "red")
-    .attr("stroke", "red")
-    .attr("stroke-width", 3)
-    .attr("fill-opacity", .4)
+  d3.select("#mapid")
+    .select("svg")
+    .selectAll("myCircle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", function(d){ return map.latLngToLayerPoint([d.lat, d.lon]).x })
+      .attr("cy", function(d){ return map.latLngToLayerPoint([d.lat, d.lon]).y })
+      .attr("r", 8) // change this to correlate with severity
+      .style("fill", function(d) {
+        return violation[d.violation];
+      })
+      .attr("stroke", false)
+      .attr("fill-opacity", .8)
 
-// Function that update circle position if something change
-function update() {
-  d3.selectAll("circle")
-    .attr("cx", function(d){ return map.latLngToLayerPoint([d.lat, d.lng]).x })
-    .attr("cy", function(d){ return map.latLngToLayerPoint([d.lat, d.lng]).y })
-}
+  // Function that update circle position if something change
+  function update() {
+    d3.selectAll("circle")
+      .attr("cx", function(d){ return map.latLngToLayerPoint([d.lat, d.lon]).x })
+      .attr("cy", function(d){ return map.latLngToLayerPoint([d.lat, d.lon]).y })
+  }
 
-// If the user change the map (zoom or drag), I update circle position:
-map.on("moveend", update)
-*/
+  // If the user change the map (zoom or drag), update circle position:
+  map.on("moveend", update) 
+})
