@@ -21,7 +21,7 @@ var violation = {
 }
 
 // Plot map
-d3.json("map-data.json", function(data) {
+d3.json("map-data-severity.json", function(data) {
 
   d3.select("#mapid")
     .select("svg")
@@ -31,7 +31,14 @@ d3.json("map-data.json", function(data) {
     .append("circle")
       .attr("cx", function(d){ return map.latLngToLayerPoint([d.lat, d.lon]).x })
       .attr("cy", function(d){ return map.latLngToLayerPoint([d.lat, d.lon]).y })
-      .attr("r", 8) // change this to correlate with severity
+      .attr("r", function(d) {
+        if(d.severity == 0) {
+          return (d.severity /3) + 5;  
+        }
+        else {
+          return (d.severity ** (1/3)) * 4;
+        }
+      }) // change this to correlate with severity
       .style("fill", function(d) {
         return violation[d.violation];
       })
