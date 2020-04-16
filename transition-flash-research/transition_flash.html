@@ -102,8 +102,10 @@ var displaySites = function(data) {
   var sites = svg.selectAll(".site")
       .data(data, function(d) {
         return d.permalink;
-      });
-
+      }
+      
+      );
+      
   sites.enter().append("circle")
       .attr("class", "site")
       .attr("cx", function(d) {
@@ -120,27 +122,79 @@ var displaySites = function(data) {
       to give the illusion of an increase in size, we use the transition function
       caveat: if we want to show a point go back to being no-violation, we need to tweak the time function to no longer display previous points.
       */
-      .attr("r", 5) // all new points start out the same size
-        .transition().duration(400) // transition to bigger size depending on whether there is a violation
-            .attr("r", function(d) {
-                if (d.violation == 1) {
-                    return 10;
-                } else {
-                    return 5;
-                }
-            })
       .attr("fill", function(d) { // color code points - again, this is just choosing the color for each point, there's no animation involved 
-           if (d.violation == 1) {
+            if (d.violation == 1) {
+             
                return 'red';
            } else {
                return 'green';
            };
-      });
+      })
+
+
+      .attr("r", 5) // all new points start out the same size
+        .transition().duration(200) // transition to bigger size depending on whether there is a violation
+            .attr("r", function(d) {
+              
+                if (d.violation == 1) {
+                  blink()
+                    return 10;
+                } else {
+                    return 5;
+                }
+
+            });
+
+    
+      function blink() {
+      svg.selectAll("circle").transition()
+      .filter(function(d) { return d.violation == 1 })
+        .duration(100)
+        .style("fill", "red")
+        .attr("r", 10)
+        .transition()
+        .duration(100)
+        .style("fill", "white")
+        .attr("r", 5)
+        .transition()
+        .duration(100)
+        .style("fill", "red")
+        .attr("r", 10)
+        .transition()
+        .duration(100)
+        .style("fill", "white")
+        .attr("r", 5)
+        .transition()
+        .duration(100)
+        .style("fill", "red")
+        .attr("r", 10)
+        .duration(100)
+        .style("fill", "white")
+        .attr("r", 5)
+        //.transition()
+        //.on("end", blink)
+ 
+    }
+
+    
+      // .enter()
+      // .attr("r", 10)
+      // return 'red';
+
       // END HERE
       // everything beyond this point is the same!
 
   sites.exit()
-      .attr("r", 10)
+
+  .attr("r", function(d) {
+          if (d.violation == 1) {
+              return 10;
+          } else {
+              return 5;
+          }
+
+      })
+
       .remove();
 };
 
@@ -159,6 +213,8 @@ d3.select('#slider3').call(d3.slider()
     displaySites(newData);
   })
 );
+
+
 
 </script>
 </body>
