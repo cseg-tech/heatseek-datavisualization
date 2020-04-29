@@ -52,6 +52,41 @@ d3.json("hs-severity.json", function(data) {
       .attr("cy", function(d){ return map.latLngToLayerPoint([d.la, d.lo]).y })
   }
 
+      //add brush to timeline, hook to callback
+      var brush = d3.svg.brush()
+      .x(x);
+      .on("brush", function(){ brushCallback(brush, data);})
+      .extent([new Date("7/1/2014"), new Date("8/1/2014")]); // initial value
+    
+    slider.append("g")
+      .attr("class", "x brush")
+      .call(brush)
+      .selectAll("rect")
+      .attr("y", "-10")
+      .attr("height", height + 10);
+
+      brush.event(slider.select('g,x.brush')); //dispatches a single brush event
+
+  });
+
+  // Called whenever the timeline brush range (extent) is updated
+  // Filters the map data to those points that fall within the selected timeline range
+  function brushCallback(d3.slider().brush, data) {
+    if (brush.empty()) {
+        update([]);
+    } else {
+        var newDateRange = brush.extent(),
+            filteredData = [];
+
+        data.forEach(function(d) {
+            if (d.TIME >= newDateRange[0] && d.TIME <= newDateRange[1]) {
+                filteredData.push(d);
+            }
+        });
+        update(filteredData);
+    }
+}
+
   // If the user change the map (zoom or drag), update circle position:
   map.on("moveend", update) 
 })
